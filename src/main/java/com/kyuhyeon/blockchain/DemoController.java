@@ -1,6 +1,7 @@
 package com.kyuhyeon.blockchain;
 
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 
@@ -103,10 +104,44 @@ public class DemoController {
 	}
 	
 	@RequestMapping(value = "/produce/roadbike")
-	public String purchaseRoadbike(){
+	public String produceRoadbike(){
 		FabricConnection conn = new FabricConnection();
 		try {
 			conn.specialized.produceRoadbike();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+        return "SUCCESS";
+	}
+	
+	@RequestMapping(value = "/purchase/roadbike")
+	public String purchaseRoadbike(){
+		FabricConnection conn = new FabricConnection();
+		try {
+			conn.bikeStore.purchaseRoadbike();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+        return "SUCCESS";
+	}
+	
+	@RequestMapping(value = "/bikelist")
+	public String getBikeList(){
+		FabricConnection conn = new FabricConnection();
+		try {
+			conn.bikeStore.getBikeList();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+        return "SUCCESS";
+	}
+	
+	@RequestMapping(value = "/purchase/mybike")
+	public String purchaseMyBike(@RequestParam(value = "userid") String userId,
+			@RequestParam(value = "sn") String serialNumber){
+		FabricConnection conn = new FabricConnection();
+		try {
+			conn.consumer.purchaseMyBike(userId, serialNumber);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
