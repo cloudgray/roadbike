@@ -65,10 +65,6 @@ public class FabricCA {
 	}
 	
 	
-	
-
-	
-
 	public void enrollAdmin() throws Exception{
 		
 		// Check to see if we've already enrolled the admin user.

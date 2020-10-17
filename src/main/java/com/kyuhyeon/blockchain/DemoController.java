@@ -1,6 +1,7 @@
 package com.kyuhyeon.blockchain;
 
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 
@@ -103,7 +104,7 @@ public class DemoController {
 	}
 	
 	@RequestMapping(value = "/produce/roadbike")
-	public String purchaseRoadbike(){
+	public String produceRoadbike(){
 		FabricConnection conn = new FabricConnection();
 		try {
 			conn.specialized.produceRoadbike();
@@ -113,6 +114,31 @@ public class DemoController {
         return "SUCCESS";
 	}
 	
+	@RequestMapping(value = "/purchase/roadbike")
+	public String purchaseRoadbike(){
+		FabricConnection conn = new FabricConnection();
+		try {
+			conn.realBikeShop.purchaseRoadbike();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+        return "SUCCESS";
+	}
+	
+	@RequestMapping(value = "/bikelist")
+	public String getBikeList(){
+		FabricConnection conn = new FabricConnection();
+		try {
+			conn.realBikeShop.getBikeList();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+        return "SUCCESS";
+	}
+	
+	
+
+	
 	@RequestMapping(value = "/create")
 	public String create(){
 		FabricConnection conn = new FabricConnection();
@@ -120,6 +146,39 @@ public class DemoController {
 			conn.create();
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+        return "SUCCESS";
+	}
+	
+	@RequestMapping(value = "/aaa")
+	public String produceTransmission2(){
+		FabricConnections2 conn = new FabricConnections2();
+		try {
+			conn.aaa();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+        return "SUCCESS";
+	}
+
+	@RequestMapping(value = "/enroll")
+	public String enroll(){
+		EnrollAdmin ea = new EnrollAdmin();
+		try {
+			ea.enroll();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+        return "SUCCESS";
+	}
+
+	@RequestMapping(value = "/register")
+	public String register(){
+		RegisterUser ru = new RegisterUser();
+		try {
+			ru.register();
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
         return "SUCCESS";
