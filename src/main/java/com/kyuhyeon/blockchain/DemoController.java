@@ -1,6 +1,7 @@
 package com.kyuhyeon.blockchain;
 
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -13,174 +14,245 @@ public class DemoController {
 	}
 	
 	@RequestMapping(value = "/admin")
-	public String enrollAdmin(){
-        FabricCA ca = new FabricCA();
+	public String enrollAdmin(@RequestParam(value = "org") String org){
+		String rtn = "";
+		String port = "";
+		if (org.equals("shimano")) {
+			port = "7054";
+		} else if (org.equals("specialized")) {
+			port = "8054";
+		} else {
+			port = "9054";
+		}
+        FabricCAService ca = new FabricCAService(port);
         try {
-			ca.enrollAdmin();
+        	if (org.equals("shimano")) {
+        		rtn = ca.enrollAdmin();
+    		} else if (org.equals("specialized")) {
+    			rtn = ca.enrollOrg2Admin();
+    		} else {
+    			rtn = ca.enrollOrg3Admin();
+    		}
+			
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-        return "SUCCESS";
+        return rtn;
 	}
 	
 	@RequestMapping(value = "/user")
-	public String registerUser(){
-		FabricCA ca = new FabricCA();
+	public String registerUser(@RequestParam(value = "org") String org,
+			@RequestParam(value = "userid") String userId){
+		String rtn = "";
+		String port = "";
+		if (org.equals("shimano")) {
+			port = "7054";
+		} else if (org.equals("specialized")) {
+			port = "8054";
+		} else {
+			port = "9054";
+		}
+		FabricCAService ca = new FabricCAService(port);
 		try {
-			ca.registerUser();
+			if (org.equals("shimano")) {
+				rtn = ca.registerUser(userId);
+    		} else if (org.equals("specialized")) {
+    			rtn = ca.registerOrg2User(userId);
+    		} else {
+    			rtn = ca.registerOrg3User(userId);
+    		}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-        return "SUCCESS";
-	}
-	
-	// Parts Company produces parts
-	@RequestMapping(value = "/produce/transmission")
-	public String produceTransmission(){
-		FabricConnection conn = new FabricConnection();
-		try {
-			conn.shimano.producePart("transmission");
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-        return "SUCCESS";
-	}
-	
-	@RequestMapping(value = "/produce/brake")
-	public String produceBrake(){
-		FabricConnection conn = new FabricConnection();
-		try {
-			conn.shimano.producePart("brake");
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-        return "SUCCESS";
-	}
-	
-	@RequestMapping(value = "/produce/wheel")
-	public String produceWheel(){
-		FabricConnection conn = new FabricConnection();
-		try {
-			conn.shimano.producePart("wheel");
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-        return "SUCCESS";
-	}
-	
-	// Manufacturer purchases parts
-	@RequestMapping(value = "/purchase/transmission")
-	public String purchaseTransmission(){
-		FabricConnection conn = new FabricConnection();
-		try {
-			conn.specialized.purchasePart("transmission");
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-        return "SUCCESS";
-	}
-	
-	@RequestMapping(value = "/purchase/brake")
-	public String purchaseBrake(){
-		FabricConnection conn = new FabricConnection();
-		try {
-			conn.specialized.purchasePart("brake");
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-        return "SUCCESS";
-	}
-	
-	@RequestMapping(value = "/purchase/wheel")
-	public String purchaseWheel(){
-		FabricConnection conn = new FabricConnection();
-		try {
-			conn.specialized.purchasePart("wheel");
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-        return "SUCCESS";
-	}
-	
-	@RequestMapping(value = "/produce/roadbike")
-	public String produceRoadbike(){
-		FabricConnection conn = new FabricConnection();
-		try {
-			conn.specialized.produceRoadbike();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-        return "SUCCESS";
-	}
-	
-	@RequestMapping(value = "/purchase/roadbike")
-	public String purchaseRoadbike(){
-		FabricConnection conn = new FabricConnection();
-		try {
-			conn.realBikeShop.purchaseRoadbike();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-        return "SUCCESS";
-	}
-	
-	@RequestMapping(value = "/bikelist")
-	public String getBikeList(){
-		FabricConnection conn = new FabricConnection();
-		try {
-			conn.realBikeShop.getBikeList();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-        return "SUCCESS";
+        return rtn;
 	}
 	
 	
-
-	
-	@RequestMapping(value = "/create")
-	public String create(){
-		FabricConnection conn = new FabricConnection();
+	@RequestMapping(value = "/crankset", method = { RequestMethod.GET })
+	public String getCrankset(@RequestParam(value = "sn") String sn,
+			@RequestParam(value = "userid") String userId){
+		String rtn = "";
+		RoadbikeCCService roadbikeCCService = new RoadbikeCCService(userId);
 		try {
-			conn.create();
+			rtn = roadbikeCCService.getCrankset(sn);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-        return "SUCCESS";
+        return rtn;
 	}
 	
-	@RequestMapping(value = "/aaa")
-	public String produceTransmission2(){
-		FabricConnections2 conn = new FabricConnections2();
+	@RequestMapping(value = "/roadbike", method = { RequestMethod.GET })
+	public String getRoadbike(@RequestParam(value = "userid") String userId,
+			@RequestParam(value = "sn") String sn){
+		String rtn = "";
+		RoadbikeCCService roadbikeCCService = new RoadbikeCCService(userId);
 		try {
-			conn.aaa();
+			rtn = roadbikeCCService.getRoadbike(sn);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-        return "SUCCESS";
+        return rtn;
+	}
+	
+	
+	@RequestMapping(value = "/shimano/crankset", method = { RequestMethod.GET })
+	public String produceCrankset(@RequestParam(value = "userid") String userId){
+		String rtn = "";
+		RoadbikeCCService roadbikeCCService = new RoadbikeCCService(userId);
+		try {
+			rtn = roadbikeCCService.shimano.produceCrankset();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+        return rtn;
+	}
+	
+	@RequestMapping(value = "/specialized/crankset", method = { RequestMethod.GET })
+	public String purchaseCrankset(@RequestParam(value = "userid") String userId){
+		String rtn = "";
+		RoadbikeCCService roadbikeCCService = new RoadbikeCCService(userId);
+		try {
+			rtn = roadbikeCCService.specialized.purchaseCrankset();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+        return rtn;
+	}
+	
+	@RequestMapping(value = "/specialized/roadbike", method = {RequestMethod.GET})
+	public String produceRoadbike(@RequestParam(value = "userid") String userId){
+		String rtn = "";
+		RoadbikeCCService roadbikeCCService = new RoadbikeCCService(userId);
+		try {
+			rtn = roadbikeCCService.specialized.produceRoadbike();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+        return rtn;
+	}
+	
+	@RequestMapping(value = "/realbikeshop/roadbike", method = {RequestMethod.GET})
+	public String warehouseRoadbike(@RequestParam(value = "userid") String userId){
+		String rtn = "";
+		RoadbikeCCService roadbikeCCService = new RoadbikeCCService(userId);
+		try {
+			rtn = roadbikeCCService.realBikeShop.warehouseRoadbike();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+        return rtn;
+	}
+	
+	@RequestMapping(value = "/realbikeshop/bikelist", method = {RequestMethod.GET})
+	public String getBikeList(@RequestParam(value = "userid") String userId){
+		String rtn = "";
+		RoadbikeCCService roadbikeCCService = new RoadbikeCCService(userId);
+		try {
+			rtn = roadbikeCCService.realBikeShop.getBikeList();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+        return rtn;
 	}
 
-	@RequestMapping(value = "/enroll")
-	public String enroll(){
-		EnrollAdmin ea = new EnrollAdmin();
+	
+	@RequestMapping(value = "/consumer/roadbike", method = {RequestMethod.GET})
+	public String purchaseRoadbike(@RequestParam(value = "userid") String userId,
+			@RequestParam(value = "sn") String sn){
+		String rtn = "";
+		RoadbikeCCService roadbikeCCService = new RoadbikeCCService(userId);
 		try {
-			ea.enroll();
+			rtn = roadbikeCCService.consumer.purchaseRoadbike(userId, sn);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-        return "SUCCESS";
+        return rtn;
 	}
 
-	@RequestMapping(value = "/register")
-	public String register(){
-		RegisterUser ru = new RegisterUser();
+	@RequestMapping(value = "/consumer/myroadbike", method = {RequestMethod.GET})
+	public String getMyBikeInfo(@RequestParam(value = "userid") String userId){
+		String rtn = "";
+		RoadbikeCCService roadbikeCCService = new RoadbikeCCService(userId);
 		try {
-			ru.register();
+			roadbikeCCService.consumer.getMyBikeInfo(userId);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-        return "SUCCESS";
+        return rtn;
+	}
+	
+	@RequestMapping(value = "/consumer/trade", method = {RequestMethod.GET})
+	public String makeTrade(@RequestParam(value = "userid") String userId,
+			@RequestParam(value = "sn") String sn,
+			@RequestParam(value = "price") int price){
+		String rtn = "";
+		RoadbikeCCService roadbikeCCService = new RoadbikeCCService(userId);
+		try {
+			rtn = roadbikeCCService.consumer.makeTrade(userId, sn, price);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+        return rtn;
+	}
+	
+	@RequestMapping(value = "/consumer/sign", method = {RequestMethod.GET})
+	public String signTrade(@RequestParam(value = "userid") String userId,
+			@RequestParam(value = "tradeid") String tradeId){
+		String rtn = "";
+		RoadbikeCCService roadbikeCCService = new RoadbikeCCService(userId);
+		try {
+			rtn = roadbikeCCService.consumer.signTrade(tradeId, userId);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+        return rtn;
+	}
+	
+	@RequestMapping(value = "/consumer/tradelist", method = {RequestMethod.GET})
+	public String getActiveTradeList(@RequestParam(value = "userid") String userId){
+		String rtn = "";
+		RoadbikeCCService roadbikeCCService = new RoadbikeCCService(userId);
+		try {
+			rtn = roadbikeCCService.consumer.getActiveTradeList();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+        return rtn;
+	}
+	
+	@RequestMapping(value = "/shimano/stock", method = {RequestMethod.GET})
+	public String getShimano(@RequestParam(value = "userid") String userId){
+		String rtn = "";
+		RoadbikeCCService roadbikeCCService = new RoadbikeCCService(userId);
+		try {
+			rtn = roadbikeCCService.shimano.getShimano();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+        return rtn;
+	}
+	
+	@RequestMapping(value = "/specialized/stock", method = {RequestMethod.GET})
+	public String getSpecialized(@RequestParam(value = "userid") String userId){
+		String rtn = "";
+		RoadbikeCCService roadbikeCCService = new RoadbikeCCService(userId);
+		try {
+			rtn = roadbikeCCService.specialized.getSpecialized();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+        return rtn;
+	}
+
+	@RequestMapping(value = "/realbikeshop/stock", method = {RequestMethod.GET})
+	public String getRealBikeShop(@RequestParam(value = "userid") String userId){
+		String rtn = "";
+		RoadbikeCCService roadbikeCCService = new RoadbikeCCService(userId);
+		try {
+			rtn = roadbikeCCService.realBikeShop.getRealBikeShop();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+        return rtn;
 	}
 }

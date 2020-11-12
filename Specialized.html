@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<h2>Fabric-CA로 사용자 계정 생성</h2>
+<p><a href="http://localhost:8080/admin?org=shimano">Fabric-CA로 admin "admin" 등록</a></p>
+<p><a href="http://localhost:8080/user?userid=user1&org=shimano">Fabric-CA로 user "user1" 등록</a></p>
+<p><a href="http://localhost:8080/user?userid=user2&org=shimano">Fabric-CA로 user "user2" 등록</a></p>
+<p><a href="http://localhost:8080/user?userid=user3&org=shimano">Fabric-CA로 user "user3" 등록</a></p>
+
+<h2>자전거 부품제조사 Shimno</h2>
+<p><a href="http://localhost:8080/shimano/crankset?userid=user1">변속기 Claris 생산</a></p>
+<p><a href="http://localhost:8080/crankset?userid=user1&sn=CRK1">변속기 CRK1 조회</a></p>
+<p><a href="http://localhost:8080/shimano/stock?userid=user1">재고 조회</a></p>
+
+<h2>자전거 제조사 Specialized</h2>
+<p><a href="http://localhost:8080/specialized/crankset?userid=user1">Shimano사의 변속기 Claris 입고</a></p>
+<p><a href="http://localhost:8080/specialized/roadbike?userid=user1">로드바이크 Allez2021 생산</a></p>
+<p><a href="http://localhost:8080/specialized/stock?userid=user1">재고 조회</a></p>
+
+<h2>자전거 판매점 RealBikeShop</h2>
+<p><a href="http://localhost:8080/realbikeshop/roadbike?userid=user1">로드바이크 Allez2021 입고</a></p>
+<p><a href="http://localhost:8080/realbikeshop/stock?userid=user1">재고 조회</a></p>
+
+<h2>소비자</h2>
+<p><a href="http://localhost:8080/consumer/roadbike?userid=user1&sn=ALLEZ1">user1, 로드바이크 Allez2021 (제품번호 : ALLEZ1) 구매</a></p>
+<p><a href="http://localhost:8080/consumer/trade?userid=user1&sn=ALLEZ1&price=500000">user1, ALLEZ1을 중고 매물로 50만원에 등록</a></p>
+<p><a href="http://localhost:8080/consumer/sign?userid=user2&tradeid=TRD_ALLEZ1_user1">user2 - 중고 자전거 ALLEZ1을 구매</a></p>
+<p><a href="http://localhost:8080/consumer/trade?userid=user1&sn=ALLEZ1&price=600000">user2, ALLEZ1을 중고 매물로 60만원에 등록</a></p>
+<p><a href="http://localhost:8080/consumer/roadbike?userid=user3&sn=ALLEZ2">user3, 로드바이크 Allez2021 (제품번호 : ALLEZ2) 구매</a></p>
+<p><a href="http://localhost:8080/consumer/trade?userid=user3&sn=ALLEZ2&price=800000">user3, ALLEZ2을 중고 매물로 80만원에 등록</a></p>
+<p><a href="http://localhost:8080/consumer/tradelist?userid=user1">중고매물 조회</a></p>
+
+<h2>조회</h2>
+<p><a href="http://localhost:8080/crankset?userid=user1&sn=CRK1">변속기 CRK1 정보 조회</a></p>
+<p><a href="http://localhost:8080/roadbike?userid=user1&sn=ALLEZ1">로드바이크 Allez1 정보 조회</a></p>
+
+</body>
+</html>
