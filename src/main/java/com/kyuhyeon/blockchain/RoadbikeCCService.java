@@ -37,7 +37,7 @@ public class RoadbikeCCService {
 			networkConfigPath = Paths.get("fabric-samples", "first-network", "connection-org1.yaml");
 			
 			builder = Gateway.createBuilder();
-			builder.identity(wallet,userId).networkConfig(networkConfigPath).discovery(true);
+			builder.identity(wallet, userId).networkConfig(networkConfigPath).discovery(true);
 //			builder.identity(wallet, "admin").networkConfig(networkConfigPath).discovery(true);
 			
 			// create a gateway connection

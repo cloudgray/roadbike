@@ -14,26 +14,12 @@ public class DemoController {
 	}
 	
 	@RequestMapping(value = "/admin")
-	public String enrollAdmin(@RequestParam(value = "org") String org){
+	public String enrollAdmin(){
 		String rtn = "";
-		String port = "";
-		if (org.equals("shimano")) {
-			port = "7054";
-		} else if (org.equals("specialized")) {
-			port = "8054";
-		} else {
-			port = "9054";
-		}
+		String port = "7054";
         FabricCAService ca = new FabricCAService(port);
         try {
-        	if (org.equals("shimano")) {
-        		rtn = ca.enrollAdmin();
-    		} else if (org.equals("specialized")) {
-    			rtn = ca.enrollOrg2Admin();
-    		} else {
-    			rtn = ca.enrollOrg3Admin();
-    		}
-			
+        	rtn = ca.enrollAdmin();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -41,26 +27,26 @@ public class DemoController {
 	}
 	
 	@RequestMapping(value = "/user")
-	public String registerUser(@RequestParam(value = "org") String org,
-			@RequestParam(value = "userid") String userId){
+	public String registerUser(@RequestParam(value = "userid") String userId){
 		String rtn = "";
-		String port = "";
-		if (org.equals("shimano")) {
-			port = "7054";
-		} else if (org.equals("specialized")) {
-			port = "8054";
-		} else {
-			port = "9054";
-		}
+		String port = "7054";
 		FabricCAService ca = new FabricCAService(port);
 		try {
-			if (org.equals("shimano")) {
-				rtn = ca.registerUser(userId);
-    		} else if (org.equals("specialized")) {
-    			rtn = ca.registerOrg2User(userId);
-    		} else {
-    			rtn = ca.registerOrg3User(userId);
-    		}
+			rtn = ca.registerUser(userId);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+        return rtn;
+	}
+	
+	@RequestMapping(value = "/user/re")
+	public String reEnrollUser(@RequestParam(value = "userid") String userId){
+		System.out.println("!!");
+		String rtn = "";
+		String port = "7054";
+		FabricCAService ca = new FabricCAService(port);
+		try {
+			rtn = ca.reenrollUser(userId);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

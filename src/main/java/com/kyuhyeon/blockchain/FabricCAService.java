@@ -75,52 +75,6 @@ public class FabricCAService {
 		return rtn;
 	}
 	
-	public String enrollOrg2Admin() throws Exception{
-		String rtn = "";
-		
-		// Check to see if we've already enrolled the admin user.
-		boolean adminExists = wallet.exists("org2Admin");
-        if (adminExists) {
-        	rtn = "An identity for the admin user \"admin\" already exists in the wallet";
-            System.out.println(rtn);
-            return rtn;
-        }
-
-        // Enroll the admin user, and import the new identity into the wallet.
-        final EnrollmentRequest enrollmentRequestTLS = new EnrollmentRequest();
-        enrollmentRequestTLS.addHost("localhost");
-        enrollmentRequestTLS.setProfile("tls");
-        Enrollment enrollment = caClient.enroll("org2Admin", "adminpw", enrollmentRequestTLS);
-        Identity user = Identity.createIdentity("Org2MSP", enrollment.getCert(), enrollment.getKey());
-        wallet.put("org2Admin", user);
-        rtn = "Successfully enrolled user \"org2Admin\" and imported it into the wallet";
-		System.out.println(rtn);
-		return rtn;
-	}
-	
-	public String enrollOrg3Admin() throws Exception{
-		String rtn = "";
-		
-		// Check to see if we've already enrolled the admin user.
-		boolean adminExists = wallet.exists("org3Admin");
-        if (adminExists) {
-        	rtn = "An identity for the admin user \"admin\" already exists in the wallet";
-            System.out.println(rtn);
-            return rtn;
-        }
-
-        // Enroll the admin user, and import the new identity into the wallet.
-        final EnrollmentRequest enrollmentRequestTLS = new EnrollmentRequest();
-        enrollmentRequestTLS.addHost("localhost");
-        enrollmentRequestTLS.setProfile("tls");
-        Enrollment enrollment = caClient.enroll("org3Admin", "adminpw", enrollmentRequestTLS);
-        Identity user = Identity.createIdentity("Org3MSP", enrollment.getCert(), enrollment.getKey());
-        wallet.put("org3Admin", user);
-        rtn = "Successfully enrolled user \"org3Admin\" and imported it into the wallet";
-		System.out.println(rtn);
-		return rtn;
-	}
-	
 	
 	public String registerUser(String userId) throws Exception {
 		String rtn = "";
@@ -140,52 +94,7 @@ public class FabricCAService {
 			return rtn;
 		}
 
-		Identity adminIdentity = wallet.get("admin");
-		User admin = new User() {
-
-			
-			@Override
-			public String getName() {
-				return "admin";
-			}
-
-			@Override
-			public Set<String> getRoles() {
-				return null;
-			}
-
-			@Override
-			public String getAccount() {
-				return null;
-			}
-
-			@Override
-			public String getAffiliation() {
-				return "org1.department1";
-			}
-
-			@Override
-			public Enrollment getEnrollment() {
-				return new Enrollment() {
-
-					@Override
-					public PrivateKey getKey() {
-						return adminIdentity.getPrivateKey();
-					}
-
-					@Override
-					public String getCert() {
-						return adminIdentity.getCertificate();
-					}
-				};
-			}
-
-			@Override
-			public String getMspId() {
-				return "Org1MSP";
-			}
-
-		};
+		User admin = newUser("admin", "org1.department1", "Org1MSP");
 
 		// Register the user, enroll the user, and import the new identity into the wallet.
 		RegistrationRequest registrationRequest = new RegistrationRequest(userId);
@@ -200,159 +109,104 @@ public class FabricCAService {
 		return rtn;
 	}
 	
-	public String registerOrg2User(String userId) throws Exception {
+	public String reenrollUser(String userId) throws Exception {
 		String rtn = "";
 		
 		// Check to see if we've already enrolled the user.
-		boolean userExists = wallet.exists(userId);
-		if (userExists) {
-			rtn = "An identity for the user \"" + userId + "\" already exists in the wallet";
-			System.out.println(rtn);
-			return rtn;
-		}
+//		boolean userExists = wallet.exists(userId);
+//		if (userExists) {
+//			rtn = "An identity for the user \"" + userId + "\" already exists in the wallet";
+//			System.out.println(rtn);
+//			return rtn;
+//		}
 
-		userExists = wallet.exists("org2Admin");
-		if (!userExists) {
-			rtn ="\"org2Admin\" needs to be enrolled and added to the wallet first";
-			System.out.println(rtn);
-			return rtn;
-		}
+//		userExists = wallet.exists("admin");
+//		if (!userExists) {
+//			rtn ="\"admin\" needs to be enrolled and added to the wallet first";
+//			System.out.println(rtn);
+//			return rtn;
+//		}
 
-		Identity adminIdentity = wallet.get("org2Admin");
-		User admin = new User() {
-
-			
-			@Override
-			public String getName() {
-				return "org2Admin";
-			}
-
-			@Override
-			public Set<String> getRoles() {
-				return null;
-			}
-
-			@Override
-			public String getAccount() {
-				return null;
-			}
-
-			@Override
-			public String getAffiliation() {
-				return "org2.department1";
-			}
-
-			@Override
-			public Enrollment getEnrollment() {
-				return new Enrollment() {
-
-					@Override
-					public PrivateKey getKey() {
-						return adminIdentity.getPrivateKey();
-					}
-
-					@Override
-					public String getCert() {
-						return adminIdentity.getCertificate();
-					}
-				};
-			}
-
-			@Override
-			public String getMspId() {
-				return "Org2MSP";
-			}
-
-		};
-
+//		User admin = newUser("admin", "org1.department1", "Org1MSP");
+		
 		// Register the user, enroll the user, and import the new identity into the wallet.
-		RegistrationRequest registrationRequest = new RegistrationRequest(userId);
-		registrationRequest.setAffiliation("org2.department1");
-		registrationRequest.setEnrollmentID(userId);
-		String enrollmentSecret = caClient.register(registrationRequest, admin);
-		Enrollment enrollment = caClient.enroll(userId, enrollmentSecret);
-		Identity user = Identity.createIdentity("Org2MSP", enrollment.getCert(), enrollment.getKey());
+//		RegistrationRequest registrationRequest = new RegistrationRequest(userId);
+//		registrationRequest.setAffiliation("org1.department1");
+//		registrationRequest.setEnrollmentID(userId);
+//		String enrollmentSecret = caClient.register(registrationRequest, admin);
+		
+		User existingUser = newUser(userId, "org1.department1", "Org1Msp");
+		final EnrollmentRequest enrollmentRequestTLS = new EnrollmentRequest();
+		enrollmentRequestTLS.addHost("localhost");
+        enrollmentRequestTLS.setProfile("tls");
+		Enrollment enrollment = caClient.reenroll(existingUser, enrollmentRequestTLS);
+		
+		
+//		Enrollment enrollment = caClient.enroll(userId, enrollmentSecret);
+		Identity user = Identity.createIdentity("Org1MSP", enrollment.getCert(), enrollment.getKey());
 		wallet.put(userId, user);
 		rtn = "Successfully enrolled user \""+ userId +"\" and imported it into the wallet";
 		System.out.println(rtn);
 		return rtn;
 	}
 	
-	public String registerOrg3User(String userId) throws Exception {
-		String rtn = "";
+	
+	
+	private User newUser(String userName, String affiliation, String mspId) {
+		Identity userIdentity;
+		User user = null;
+		try {
+			userIdentity = wallet.get(userName);
+			user = new User() {
+				
+				@Override
+				public String getName() {
+					return userName;
+				}
+
+				@Override
+				public Set<String> getRoles() {
+					return null;
+				}
+
+				@Override
+				public String getAccount() {
+					return null;
+				}
+
+				@Override
+				public String getAffiliation() {
+					return affiliation;
+				}
+
+				@Override
+				public Enrollment getEnrollment() {
+					return new Enrollment() {
+
+						@Override
+						public PrivateKey getKey() {
+							return userIdentity.getPrivateKey();
+						}
+
+						@Override
+						public String getCert() {
+							return userIdentity.getCertificate();
+						}
+					};
+				}
+
+				@Override
+				public String getMspId() {
+					return mspId;
+				}
+
+			};
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		
-		// Check to see if we've already enrolled the user.
-		boolean userExists = wallet.exists(userId);
-		if (userExists) {
-			rtn = "An identity for the user \"" + userId + "\" already exists in the wallet";
-			System.out.println(rtn);
-			return rtn;
-		}
-
-		userExists = wallet.exists("org3Admin");
-		if (!userExists) {
-			rtn ="\"org3Admin\" needs to be enrolled and added to the wallet first";
-			System.out.println(rtn);
-			return rtn;
-		}
-
-		Identity adminIdentity = wallet.get("org3Admin");
-		User admin = new User() {
-
-			
-			@Override
-			public String getName() {
-				return "org3Admin";
-			}
-
-			@Override
-			public Set<String> getRoles() {
-				return null;
-			}
-
-			@Override
-			public String getAccount() {
-				return null;
-			}
-
-			@Override
-			public String getAffiliation() {
-				return "org3.department1";
-			}
-
-			@Override
-			public Enrollment getEnrollment() {
-				return new Enrollment() {
-
-					@Override
-					public PrivateKey getKey() {
-						return adminIdentity.getPrivateKey();
-					}
-
-					@Override
-					public String getCert() {
-						return adminIdentity.getCertificate();
-					}
-				};
-			}
-
-			@Override
-			public String getMspId() {
-				return "Org3MSP";
-			}
-
-		};
-
-		// Register the user, enroll the user, and import the new identity into the wallet.
-		RegistrationRequest registrationRequest = new RegistrationRequest(userId);
-		registrationRequest.setAffiliation("org3.department1");
-		registrationRequest.setEnrollmentID(userId);
-		String enrollmentSecret = caClient.register(registrationRequest, admin);
-		Enrollment enrollment = caClient.enroll(userId, enrollmentSecret);
-		Identity user = Identity.createIdentity("Org3MSP", enrollment.getCert(), enrollment.getKey());
-		wallet.put(userId, user);
-		rtn = "Successfully enrolled user \""+ userId +"\" and imported it into the wallet";
-		System.out.println(rtn);
-		return rtn;
+		
+		return user;
 	}
+	
 }
